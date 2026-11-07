@@ -1,6 +1,7 @@
 package br.com.ecoalerta.controller;
 
 import br.com.ecoalerta.dto.UserRequestDto;
+import br.com.ecoalerta.dto.UserResponseDto;
 import br.com.ecoalerta.entity.User;
 import br.com.ecoalerta.service.UserService;
 import jakarta.validation.Valid;
@@ -19,7 +20,7 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public User create(
+    public UserResponseDto create(
             @RequestBody
             @Valid
             UserRequestDto dto

@@ -1,5 +1,6 @@
 package br.com.ecoalerta.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
@@ -32,6 +33,7 @@ public class Occurrence {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnoreProperties({"password"})
     private User user;
 
     @PrePersist

@@ -1,6 +1,7 @@
 package br.com.ecoalerta.service;
 
 import br.com.ecoalerta.dto.UserRequestDto;
+import br.com.ecoalerta.dto.UserResponseDto;
 import br.com.ecoalerta.entity.User;
 import br.com.ecoalerta.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ public class UserService {
         this.repository = repository;
     }
 
-    public User create(UserRequestDto dto) {
+    public UserResponseDto create(UserRequestDto dto) {
 
         repository.findByEmail(dto.getEmail())
                 .ifPresent(user -> {
@@ -29,7 +30,14 @@ public class UserService {
         user.setEmail(dto.getEmail());
         user.setPassword(dto.getPassword());
 
-        return repository.save(user);
+        User saved = repository.save(user);
+
+        return new UserResponseDto(
+                saved.getId(),
+                saved.getName(),
+                saved.getEmail(),
+                saved.getCreatedAt()
+        );
     }
 
 }
