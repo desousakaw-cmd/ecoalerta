@@ -3,6 +3,7 @@ package br.com.ecoalerta.service;
 import br.com.ecoalerta.dto.UserRequestDto;
 import br.com.ecoalerta.dto.UserResponseDto;
 import br.com.ecoalerta.entity.User;
+import br.com.ecoalerta.exception.BusinessException;
 import br.com.ecoalerta.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +20,7 @@ public class UserService {
 
         repository.findByEmail(dto.getEmail())
                 .ifPresent(user -> {
-                    throw new RuntimeException(
+                    throw new BusinessException(
                             "Já existe usuário com este e-mail"
                     );
                 });

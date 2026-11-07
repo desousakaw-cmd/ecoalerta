@@ -4,6 +4,7 @@ import br.com.ecoalerta.dto.OccurrenceRequestDto;
 import br.com.ecoalerta.dto.OccurrenceResponseDto;
 import br.com.ecoalerta.entity.Occurrence;
 import br.com.ecoalerta.entity.User;
+import br.com.ecoalerta.exception.ResourceNotFoundException;
 import br.com.ecoalerta.repository.OccurrenceRepository;
 import br.com.ecoalerta.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,7 @@ public class OccurrenceService {
         User user = userRepository.findById(
                         dto.getUserId())
                 .orElseThrow(() ->
-                        new RuntimeException(
+                        new ResourceNotFoundException(
                                 "Usuário não encontrado"));
 
         Occurrence occurrence = new Occurrence();
@@ -61,7 +62,7 @@ public class OccurrenceService {
         Occurrence occurrence =
                 occurrenceRepository.findById(id)
                         .orElseThrow(() ->
-                                new RuntimeException(
+                                new ResourceNotFoundException(
                                         "Ocorrência não encontrada"));
 
         return mapToDTO(occurrence);
