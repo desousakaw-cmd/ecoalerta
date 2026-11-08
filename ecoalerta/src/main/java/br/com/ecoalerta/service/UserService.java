@@ -7,6 +7,8 @@ import br.com.ecoalerta.exception.BusinessException;
 import br.com.ecoalerta.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService {
 
@@ -41,4 +43,16 @@ public class UserService {
         );
     }
 
+    public List<UserResponseDto> findAll() {
+
+        return repository.findAll()
+                .stream()
+                .map(user -> new UserResponseDto(
+                        user.getId(),
+                        user.getName(),
+                        user.getEmail(),
+                        user.getCreatedAt()
+                ))
+                .toList();
+    }
 }
