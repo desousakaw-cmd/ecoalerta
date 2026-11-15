@@ -1,5 +1,6 @@
 package br.com.ecoalerta.controller;
 
+import br.com.ecoalerta.dto.DashboardStatsDto;
 import br.com.ecoalerta.dto.OccurrenceRequestDto;
 import br.com.ecoalerta.dto.OccurrenceResponseDto;
 import br.com.ecoalerta.service.OccurrenceService;
@@ -38,6 +39,7 @@ public class OccurrenceController {
     @Operation(summary = "Listar ocorrências")
     @GetMapping
     public List<OccurrenceResponseDto> findAll() {
+
         return service.findAll();
     }
 
@@ -47,5 +49,32 @@ public class OccurrenceController {
             @PathVariable Long id) {
 
         return service.findById(id);
+    }
+
+    @Operation(summary = "Atualizar ocorrência")
+    @PutMapping("/{id}")
+    public OccurrenceResponseDto update(
+            @PathVariable Long id,
+            @RequestBody
+            @Valid
+            OccurrenceRequestDto dto) {
+
+        return service.update(id, dto);
+    }
+
+    @Operation(summary = "Excluir ocorrência")
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(
+            @PathVariable Long id) {
+
+        service.delete(id);
+    }
+
+    @Operation(summary = "Obter estatísticas do dashboard")
+    @GetMapping("/stats")
+    public DashboardStatsDto getStatistics() {
+
+        return service.getStatistics();
     }
 }

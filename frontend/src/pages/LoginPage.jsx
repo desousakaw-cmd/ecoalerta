@@ -33,82 +33,128 @@ function LoginPage() {
                 )
             );
 
-            navigate("/dashboard");
+            navigate(
+                "/dashboard"
+            );
 
         } catch (error) {
 
             alert(
                 "Usuário ou senha inválidos"
             );
+
         }
     }
 
     return (
 
-        <div className="container">
+        <div className="login-wrapper">
 
-            <div className="row justify-content-center mt-5">
+            <div className="login-card">
 
-                <div className="col-md-4">
+                <div className="text-center mb-4">
 
-                    <div className="card p-4">
+                    <div className="logo-circle">
 
-                        <h2
-                            className="text-center mb-4">
-
-                            EcoAlerta
-
-                        </h2>
-
-                        <form
-                            onSubmit={handleLogin}>
-
-                            <input
-                                type="email"
-                                className="form-control mb-3"
-                                placeholder="E-mail"
-                                value={email}
-                                onChange={
-                                    e =>
-                                        setEmail(
-                                            e.target.value
-                                        )
-                                }
-                            />
-
-                            <input
-                                type="password"
-                                className="form-control mb-3"
-                                placeholder="Senha"
-                                value={password}
-                                onChange={
-                                    e =>
-                                        setPassword(
-                                            e.target.value
-                                        )
-                                }
-                            />
-
-                            <button
-                                className="btn btn-primary w-100">
-
-                                Entrar
-
-                            </button>
-
-                        </form>
-
-                        <hr />
-
-                        <Link
-                            to="/register"
-                            className="btn btn-outline-success">
-
-                            Criar Conta
-
-                        </Link>
+                        🌱
 
                     </div>
+
+                    <h2
+                        className="fw-bold">
+
+                        EcoAlerta
+
+                    </h2>
+
+                    <p
+                        className="text-muted">
+
+                        Plataforma colaborativa para monitoramento de ocorrências ambientais.
+
+                    </p>
+
+                </div>
+
+                <form
+                    onSubmit={handleLogin}>
+
+                    <div className="mb-3">
+
+                        <label
+                            className="form-label">
+
+                            E-mail
+
+                        </label>
+
+                        <input
+                            type="email"
+                            className="form-control"
+                            placeholder="Digite seu e-mail"
+                            value={email}
+                            onChange={
+                                e =>
+                                    setEmail(
+                                        e.target.value
+                                    )
+                            }
+                        />
+
+                    </div>
+
+                    <div className="mb-4">
+
+                        <label
+                            className="form-label">
+
+                            Senha
+
+                        </label>
+
+                        <input
+                            type="password"
+                            className="form-control"
+                            placeholder="Digite sua senha"
+                            value={password}
+                            onChange={
+                                e =>
+                                    setPassword(
+                                        e.target.value
+                                    )
+                            }
+                        />
+
+                    </div>
+
+                    <button
+                        className="btn eco-btn eco-btn-primary w-100">
+
+                        Entrar
+
+                    </button>
+
+                </form>
+
+                <div
+                    className="text-center mt-4">
+
+                    <span
+                        className="text-muted">
+
+                        Ainda não possui conta?
+
+                    </span>
+
+                    <br />
+
+                    <Link
+                        to="/register"
+                        className="fw-semibold text-success">
+
+                        Criar Conta
+
+                    </Link>
 
                 </div>
 

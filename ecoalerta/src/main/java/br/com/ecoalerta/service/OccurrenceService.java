@@ -1,8 +1,10 @@
 package br.com.ecoalerta.service;
 
+import br.com.ecoalerta.dto.DashboardStatsDto;
 import br.com.ecoalerta.dto.OccurrenceRequestDto;
 import br.com.ecoalerta.dto.OccurrenceResponseDto;
 import br.com.ecoalerta.entity.Occurrence;
+import br.com.ecoalerta.entity.RiskLevel;
 import br.com.ecoalerta.entity.User;
 import br.com.ecoalerta.exception.ResourceNotFoundException;
 import br.com.ecoalerta.repository.OccurrenceRepository;
@@ -66,6 +68,69 @@ public class OccurrenceService {
                                         "Ocorrência não encontrada"));
 
         return mapToDTO(occurrence);
+    }
+
+    public OccurrenceResponseDto update(
+            Long id,
+            OccurrenceRequestDto dto) {
+
+        Occurrence occurrence =
+                occurrenceRepository.findById(id)
+                        .orElseThrow(() ->
+                                new ResourceNotFoundException(
+                                        "Ocorrência não encontrada"));
+
+        occurrence.setTitle(dto.getTitle());
+        occurrence.setDescription(dto.getDescription());
+        occurrence.setAddress(dto.getAddress());
+        occurrence.setRiskLevel(dto.getRiskLevel());
+        occurrence.setImageUrl(dto.getImageUrl());
+
+        Occurrence updated =
+                occurrenceRepository.save(occurrence);
+
+        return mapToDTO(updated);
+    }
+
+    public void delete(Long id) {
+
+        Occurrence occurrence =
+                occurrenceRepository.findById(id)
+                        .orElseThrow(() ->
+                                new ResourceNotFoundException(
+                                        "Ocorrência não encontrada"));
+
+        occurrenceRepository.delete(
+                occurrence
+        );
+    }
+
+    public DashboardStatsDto getStatistics() {
+
+        long total =
+                occurrenceRepository.count();
+
+        long low =
+                occurrenceRepository.countByRiskLevel(
+                        RiskLevel.LOW
+                );
+
+        long medium =
+                occurrenceRepository.countByRiskLevel(
+                        RiskLevel.MEDIUM
+                );
+
+        long high =
+                occurrenceRepository.countByRiskLevel(
+                        RiskLevel.HIGH
+                );
+
+        return new DashboardStatsDto(
+                total,
+                low,
+                medium,
+                high
+        );
     }
 
     private OccurrenceResponseDto mapToDTO(

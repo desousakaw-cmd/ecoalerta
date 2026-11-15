@@ -1,39 +1,76 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer.jsx";
+
 import api from "../services/api";
 
 function CreateOccurrencePage() {
 
-    const navigate =
-        useNavigate();
+    const navigate = useNavigate();
 
-    const user =
-        JSON.parse(
-            localStorage.getItem("user")
+    const user = JSON.parse(
+        localStorage.getItem("user")
+    );
+
+    const [title, setTitle] =
+        useState("");
+
+    const [description, setDescription] =
+        useState("");
+
+    const [address, setAddress] =
+        useState("");
+
+    const [riskLevel, setRiskLevel] =
+        useState("LOW");
+
+    const [imageFile, setImageFile] =
+        useState(null);
+
+    async function uploadImage() {
+
+        if (!imageFile) {
+
+            return null;
+        }
+
+        const formData = new FormData();
+
+        formData.append(
+            "file",
+            imageFile
         );
 
-    const [title,
-        setTitle] =
-        useState("");
+        const response =
+            await api.post(
+                "/upload",
+                formData,
+                {
+                    headers: {
+                        "Content-Type":
+                            "multipart/form-data"
+                    }
+                }
+            );
 
-    const [description,
-        setDescription] =
-        useState("");
-
-    const [address,
-        setAddress] =
-        useState("");
-
-    const [riskLevel,
-        setRiskLevel] =
-        useState("LOW");
+        return response.data;
+    }
 
     async function handleSubmit(event) {
 
         event.preventDefault();
 
         try {
+
+            let imageUrl = null;
+
+            if (imageFile) {
+
+                imageUrl =
+                    await uploadImage();
+            }
 
             await api.post(
                 "/occurrences",
@@ -42,6 +79,7 @@ function CreateOccurrencePage() {
                     description,
                     address,
                     riskLevel,
+                    imageUrl,
                     userId: user.id
                 }
             );
@@ -54,7 +92,9 @@ function CreateOccurrencePage() {
                 "/occurrences"
             );
 
-        } catch {
+        } catch (error) {
+
+            console.error(error);
 
             alert(
                 "Erro ao cadastrar ocorrência"
@@ -64,88 +104,192 @@ function CreateOccurrencePage() {
 
     return (
 
-        <div className="container mt-4">
+        <>
+            <Navbar />
 
-            <h2>
-                Nova Ocorrência
-            </h2>
+            <div className="container py-5">
 
-            <hr />
+                <div className="row justify-content-center">
 
-            <form
-                onSubmit={handleSubmit}>
+                    <div className="col-lg-8">
 
-                <input
-                    className="form-control mb-3"
-                    placeholder="Título"
-                    value={title}
-                    onChange={
-                        e =>
-                            setTitle(
-                                e.target.value
-                            )
-                    }
-                />
+                        <div className="text-center mb-4">
 
-                <textarea
-                    className="form-control mb-3"
-                    placeholder="Descrição"
-                    value={description}
-                    onChange={
-                        e =>
-                            setDescription(
-                                e.target.value
-                            )
-                    }
-                />
+                            <h1
+                                className="hero-title">
 
-                <input
-                    className="form-control mb-3"
-                    placeholder="Endereço"
-                    value={address}
-                    onChange={
-                        e =>
-                            setAddress(
-                                e.target.value
-                            )
-                    }
-                />
+                                Registrar Ocorrência
 
-                <select
-                    className="form-select mb-3"
-                    value={riskLevel}
-                    onChange={
-                        e =>
-                            setRiskLevel(
-                                e.target.value
-                            )
-                    }>
+                            </h1>
 
-                    <option value="LOW">
-                        Baixo
-                    </option>
+                            <p
+                                className="hero-subtitle">
 
-                    <option value="MEDIUM">
-                        Médio
-                    </option>
+                                Compartilhe informações sobre problemas ambientais da sua região.
 
-                    <option value="HIGH">
-                        Alto
-                    </option>
+                            </p>
 
-                </select>
+                        </div>
 
-                <button
-                    className="btn btn-success">
+                        <div className="eco-form">
 
-                    Salvar
+                            <form
+                                onSubmit={handleSubmit}>
 
-                </button>
+                                <div className="mb-4">
 
-            </form>
+                                    <label
+                                        className="form-label fw-semibold">
 
-        </div>
+                                        Título
 
+                                    </label>
+
+                                    <input
+                                        className="form-control"
+                                        placeholder="Ex.: Descarte irregular de lixo"
+                                        value={title}
+                                        onChange={
+                                            e =>
+                                                setTitle(
+                                                    e.target.value
+                                                )
+                                        }
+                                    />
+
+                                </div>
+
+                                <div className="mb-4">
+
+                                    <label
+                                        className="form-label fw-semibold">
+
+                                        Descrição
+
+                                    </label>
+
+                                    <textarea
+                                        rows="5"
+                                        className="form-control"
+                                        placeholder="Descreva a situação encontrada..."
+                                        value={description}
+                                        onChange={
+                                            e =>
+                                                setDescription(
+                                                    e.target.value
+                                                )
+                                        }
+                                    />
+
+                                </div>
+
+                                <div className="mb-4">
+
+                                    <label
+                                        className="form-label fw-semibold">
+
+                                        Endereço
+
+                                    </label>
+
+                                    <input
+                                        className="form-control"
+                                        placeholder="Informe o local da ocorrência"
+                                        value={address}
+                                        onChange={
+                                            e =>
+                                                setAddress(
+                                                    e.target.value
+                                                )
+                                        }
+                                    />
+
+                                </div>
+
+                                <div className="mb-4">
+
+                                    <label
+                                        className="form-label fw-semibold">
+
+                                        Nível de Risco
+
+                                    </label>
+
+                                    <select
+                                        className="form-select"
+                                        value={riskLevel}
+                                        onChange={
+                                            e =>
+                                                setRiskLevel(
+                                                    e.target.value
+                                                )
+                                        }>
+
+                                        <option value="LOW">
+
+                                            Baixo
+
+                                        </option>
+
+                                        <option value="MEDIUM">
+
+                                            Médio
+
+                                        </option>
+
+                                        <option value="HIGH">
+
+                                            Alto
+
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+                                <div className="mb-4">
+
+                                    <label
+                                        className="form-label fw-semibold">
+
+                                        Foto da Ocorrência
+
+                                    </label>
+
+                                    <input
+                                        type="file"
+                                        className="form-control"
+                                        onChange={
+                                            e =>
+                                                setImageFile(
+                                                    e.target.files[0]
+                                                )
+                                        }
+                                    />
+
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    className="btn eco-btn eco-btn-success w-100">
+
+                                    Registrar Ocorrência
+
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <Footer />
+
+        </>
     );
 }
 

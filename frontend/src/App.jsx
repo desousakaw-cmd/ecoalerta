@@ -9,6 +9,8 @@ import RegisterPage from "./pages/RegisterPage";
 import DashboardPage from "./pages/DashboardPage";
 import OccurrencesPage from "./pages/OccurrencesPage";
 import CreateOccurrencePage from "./pages/CreateOccurrencePage";
+import OccurrenceDetailsPage from "./pages/OccurrenceDetailsPage.jsx";
+import EditOccurrencePage from "./pages/EditOccurrencePage.jsx";
 
 function App() {
 
@@ -43,6 +45,15 @@ function App() {
               element={<CreateOccurrencePage />}
           />
 
+          <Route
+            path="/occurrences/:id"
+            element={<OccurrenceDetailsPage/>}
+            />
+
+          <Route
+            path="/occurrences/:id/edit"
+            element={<EditOccurrencePage/>}
+            />
         </Routes>
 
       </BrowserRouter>

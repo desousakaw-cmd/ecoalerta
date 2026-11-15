@@ -1,9 +1,14 @@
 package br.com.ecoalerta.repository;
 
 import br.com.ecoalerta.entity.Occurrence;
+import br.com.ecoalerta.entity.RiskLevel;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
+public interface OccurrenceRepository
+        extends JpaRepository<Occurrence, Long> {
 
-public interface OccurrenceRepository extends JpaRepository<Occurrence, Long> {
+    long countByRiskLevel(
+            RiskLevel riskLevel
+    );
+
 }
