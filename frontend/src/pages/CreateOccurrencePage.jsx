@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Navbar from "../components/Navbar";
-import Footer from "../components/Footer.jsx";
 
 import api from "../services/api";
 
@@ -29,6 +28,57 @@ function CreateOccurrencePage() {
     const [imageFile, setImageFile] =
         useState(null);
 
+    const [aiSuggestion,
+        setAiSuggestion] =
+        useState(null);
+
+    async function analyzeWithAi() {
+
+        if (!description) {
+
+            alert(
+                "Informe uma descrição para análise."
+            );
+
+            return;
+        }
+
+        try {
+
+            const response =
+                await api.post(
+
+                    "/ai/classify",
+
+                    description,
+
+                    {
+                        headers: {
+                            "Content-Type":
+                                "text/plain"
+                        }
+                    }
+
+                );
+
+            setAiSuggestion(
+                response.data
+            );
+
+            setRiskLevel(
+                response.data.suggestedRisk
+            );
+
+        } catch (error) {
+
+            console.error(error);
+
+            alert(
+                "Erro ao executar IA."
+            );
+        }
+    }
+
     async function uploadImage() {
 
         if (!imageFile) {
@@ -36,7 +86,8 @@ function CreateOccurrencePage() {
             return null;
         }
 
-        const formData = new FormData();
+        const formData =
+            new FormData();
 
         formData.append(
             "file",
@@ -73,7 +124,9 @@ function CreateOccurrencePage() {
             }
 
             await api.post(
+
                 "/occurrences",
+
                 {
                     title,
                     description,
@@ -82,6 +135,7 @@ function CreateOccurrencePage() {
                     imageUrl,
                     userId: user.id
                 }
+
             );
 
             alert(
@@ -97,7 +151,7 @@ function CreateOccurrencePage() {
             console.error(error);
 
             alert(
-                "Erro ao cadastrar ocorrência"
+                "Erro ao cadastrar ocorrência."
             );
         }
     }
@@ -185,6 +239,84 @@ function CreateOccurrencePage() {
 
                                 <div className="mb-4">
 
+                                    <button
+                                        type="button"
+                                        className="btn eco-btn eco-btn-primary"
+                                        onClick={analyzeWithAi}>
+
+                                        🤖 Analisar com IA
+
+                                    </button>
+
+                                </div>
+
+                                {
+                                    aiSuggestion && (
+
+                                        <div
+                                            className="alert alert-success mb-4">
+
+                                            <strong>
+
+                                                Resultado da IA
+
+                                            </strong>
+
+                                            <hr />
+
+                                            <p>
+
+                                                <strong>
+                                                    Risco Sugerido:
+                                                </strong>
+
+                                                {" "}
+
+                                                {
+                                                    aiSuggestion.suggestedRisk
+                                                }
+
+                                            </p>
+
+                                            <p>
+
+                                                <strong>
+                                                    Confiança:
+                                                </strong>
+
+                                                {" "}
+
+                                                {
+                                                    (
+                                                        aiSuggestion.confidence * 100
+                                                    ).toFixed(
+                                                        0
+                                                    )
+                                                }%
+
+                                            </p>
+
+                                            <p>
+
+                                                <strong>
+                                                    Justificativa:
+                                                </strong>
+
+                                                {" "}
+
+                                                {
+                                                    aiSuggestion.rationale
+                                                }
+
+                                            </p>
+
+                                        </div>
+
+                                    )
+                                }
+
+                                <div className="mb-4">
+
                                     <label
                                         className="form-label fw-semibold">
 
@@ -226,21 +358,15 @@ function CreateOccurrencePage() {
                                         }>
 
                                         <option value="LOW">
-
                                             Baixo
-
                                         </option>
 
                                         <option value="MEDIUM">
-
                                             Médio
-
                                         </option>
 
                                         <option value="HIGH">
-
                                             Alto
-
                                         </option>
 
                                     </select>
@@ -286,8 +412,6 @@ function CreateOccurrencePage() {
                 </div>
 
             </div>
-
-            <Footer />
 
         </>
     );
