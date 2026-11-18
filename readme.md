@@ -6,6 +6,12 @@ O **EcoAlerta** foi desenvolvido como projeto acadêmico da **Global Solution FI
 
 ---
 
+# Como subir o projeto?
+- É simples, basta subir a imagem docker do banco com o comando docker-compose up.
+- Em seguida, na pasta ecoalerta (backend) podemos digitar spring-boot:run.
+- E por ultimo, na pasta frontend, npm run dev.
+- O link para acessar será exibido no terminal.
+
 # 📋 Funcionalidades
 
 ## 👤 Usuários
